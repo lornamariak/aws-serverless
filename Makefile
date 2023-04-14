@@ -2,10 +2,10 @@ install:
 	pip install -r requirements.txt
 
 format:	
-	black app/api.py app/data/*py
+	black app/*py
 
 lint:
-	pylint --disable=R, app/api.py app/data/*py
+	pylint --disable=R, app/*py
 
 refactor: format lint
 		
