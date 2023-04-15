@@ -1,12 +1,12 @@
 """Module to get a list of cat breeds"""
+import uuid
 import requests
 import boto3
-import uuid
 from fastapi import APIRouter, HTTPException
 
 router = APIRouter()
 s3 = boto3.client("s3")
-bucket_name = "catsapi"
+BUCKET_NAME = "catsapi"
 
 def get_breeds():
     """get all the breeds available"""
@@ -16,8 +16,7 @@ def get_breeds():
         breeds = response.json()
         breed_dict = {breed["id"]: breed["name"] for breed in breeds}
         return breed_dict
-    else:
-        return None
+    return None
 
 def get_cat_type(breed_name):
     """get the details of a specific cat breed"""
@@ -33,8 +32,7 @@ def get_cat_type(breed_name):
     response = requests.get(url, timeout=20)
     if response.status_code == 200 and len(response.json()) > 0:
         return response.json()[0]
-    else:
-        return None
+    return None
 
 @router.get("/")
 def list_breeds():
@@ -42,8 +40,7 @@ def list_breeds():
     breeds = get_breeds()
     if breeds:
         return breeds
-    else:
-        raise HTTPException(status_code=500, detail="Failed to retrieve cat breeds")
+    raise HTTPException(status_code=500, detail="Failed to retrieve cat breeds")
 
 @router.get("/{breed_name}")
 def get_breed_details(breed_name: str):
@@ -54,11 +51,10 @@ def get_breed_details(breed_name: str):
         object_id = str(uuid.uuid4())
         csv_data = ",".join([str(val) for val in breed.values()])
         s3.put_object(
-            Bucket=bucket_name,
+            Bucket=BUCKET_NAME,
             Key=f"{object_id}.csv",
             Body=csv_data.encode("utf-8")
         )
         return breed
-    else:
-        raise HTTPException(status_code=404, detail="Breed not found")
+    raise HTTPException(status_code=404, detail="Breed not found")
     
