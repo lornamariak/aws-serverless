@@ -21,3 +21,13 @@ This application can be used to automate the process of reading data from extern
 `run make install`
 
 `run make build`
+
+## Load test Results
+
+### Requests
+
+![](requests.png)
+
+### Users
+
+![](users.png)
