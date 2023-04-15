@@ -7,6 +7,10 @@ format:
 lint:
 	pylint --disable=R, app/*py
 
-refactor: format lint
-		
-all: install lint format
+refactor: 
+	format lint
+
+build:
+	uvicorn app.main:app --reload
+
+all: install lint format build
